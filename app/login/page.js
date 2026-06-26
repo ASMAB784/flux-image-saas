@@ -1,25 +1,27 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createClient } from '../../utils/supabase/client';
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const mode = searchParams.get('mode');
-
   const supabase = createClient();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [isSignUp, setIsSignUp] = useState(mode === 'signup');
+  const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
-    setIsSignUp(mode === 'signup');
-  }, [mode]);
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get('mode');
+
+    if (mode === 'signup') {
+      setIsSignUp(true);
+    }
+  }, []);
 
   useEffect(() => {
     async function checkSession() {
